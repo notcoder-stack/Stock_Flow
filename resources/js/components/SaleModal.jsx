@@ -1,15 +1,14 @@
 import { useEffect, useState } from "react";
 import { router } from "@inertiajs/react";
-import { Button } from "@mantine/core";
-import { Input } from "@mantine/core";
-import { Modal } from "@mantine/core";
-export default function SupplierModal({ isOpen, onClose, sale }) {
+import { Button, Input, Modal } from "@mantine/core";
+
+export default function SaleModal({ isOpen, onClose, sale }) {
     const [formData, setFormData] = useState({
         productName: "",
         quantity: 0,
         price: 0,
         revenue: 0,
-        date: new Date(),
+        date: "",
     });
 
     useEffect(() => {

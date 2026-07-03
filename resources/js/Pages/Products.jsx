@@ -124,7 +124,7 @@ export default function Products({ products }) {
             <ProductModal
                 isOpen={opened}
                 onClose={close}
-                employee={selectedProduct}
+                product={selectedProduct}
             />
         </div>
     );

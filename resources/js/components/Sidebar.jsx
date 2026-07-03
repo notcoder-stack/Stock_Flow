@@ -1,17 +1,15 @@
-import { useState } from "react";
 import {
     IconForklift,
     IconClipboard,
     IconUser,
     IconCoins,
     IconAdjustmentsHorizontal,
-    IconArchive,
     IconLayoutDashboard,
+    IconLogout,
 } from "@tabler/icons-react";
-import { Code, Group } from "@mantine/core";
-import { MantineLogo } from "@mantinex/mantine-logo";
+import { Group } from "@mantine/core";
 import classes from "../../css/Sidebar.module.css";
-import { Link } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 
 const data = [
     { link: "/dashboard", label: "Dashboard", icon: IconLayoutDashboard },
@@ -23,10 +21,20 @@ const data = [
 ];
 
 export default function Sidebar() {
-    const [active, setActive] = useState("Billing");
+    const { url } = usePage();
+
+    const handleLogout = (e) => {
+        e.preventDefault();
+        router.post("/logout");
+    };
 
     const links = data.map((item) => (
-        <Link className={classes.link} href={item.link} key={item.label}>
+        <Link
+            className={classes.link}
+            href={item.link}
+            key={item.label}
+            data-active={url.startsWith(item.link) || undefined}
+        >
             <item.icon className={classes.linkIcon} stroke={1.5} />
             <span>{item.label}</span>
         </Link>
@@ -42,6 +50,16 @@ export default function Sidebar() {
             </div>
 
             <div className={classes.footer}>
+                <Link
+                    className={classes.link}
+                    href="/logout"
+                    onClick={handleLogout}
+                    as="button"
+                    method="post"
+                >
+                    <IconLogout className={classes.linkIcon} stroke={1.5} />
+                    <span>Logout</span>
+                </Link>
                 <span>&copy; 2025 STOCKFLOW</span>
             </div>
         </nav>
