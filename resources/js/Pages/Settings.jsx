@@ -116,7 +116,6 @@ export default function Settings() {
                 <div className="p-5 space-y-3">
                     {[
                         { label: "Application", value: "StockFlow v1.0" },
-                        { label: "Framework", value: "Laravel 12 + Inertia.js + React" },
                         { label: "Support", value: "help@stockflow.app" },
                     ].map(({ label, value }) => (
                         <div key={label} className="flex items-center justify-between py-2 border-b border-slate-50 last:border-0">
