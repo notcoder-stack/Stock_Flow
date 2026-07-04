@@ -17,4 +17,15 @@ export default defineConfig({
             "@": "/resources/js",
         },
     },
+    server: {
+        host: "localhost",
+        port: 5173,
+        cors: true,
+        allowedHosts: "all",
+        hmr: {
+            host: "localhost",
+            protocol: "ws",
+            port: 5173,
+        },
+    },
 });

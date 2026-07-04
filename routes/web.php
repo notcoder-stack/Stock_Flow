@@ -30,6 +30,7 @@ Route::middleware("auth")->group(function () {
     Route::resource("suppliers", SupplierController::class);
     Route::resource("employees", EmployeeController::class);
 
+    Route::put("/settings/password", [SettingsController::class, "updatePassword"])->name("settings.password");
     Route::get("/settings", [SettingsController::class, "index"])->name(
         "settings.index"
     );
