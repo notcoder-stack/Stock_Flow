@@ -1,17 +1,20 @@
 import AuthLayout from "../../Layouts/AuthLayout";
-import { Link, useForm } from "@inertiajs/react";
-import { IconPackage, IconMail, IconLock, IconArrowRight, IconAlertCircle } from "@tabler/icons-react";
+import { useForm } from "@inertiajs/react";
+import { IconPackage, IconLock, IconMail, IconArrowRight, IconAlertCircle } from "@tabler/icons-react";
 
-export default function Login() {
+export default function ResetPassword({ token, email }) {
     const { data, setData, post, errors, processing, reset } = useForm({
-        email: "",
+        token: token,
+        email: email || "",
         password: "",
-        remember: false,
+        password_confirmation: "",
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post("/login", { onFinish: () => reset("password") });
+        post("/reset-password", {
+            onFinish: () => reset("password", "password_confirmation"),
+        });
     };
 
     return (
@@ -26,10 +29,10 @@ export default function Login() {
                 </div>
                 <div>
                     <h2 className="text-4xl font-extrabold text-white leading-tight mb-4">
-                        Welcome back to<br />your dashboard.
+                        Choose a new password.
                     </h2>
                     <p className="text-indigo-200 text-sm leading-relaxed max-w-sm">
-                        Sign in to manage your inventory, track sales, and keep your business running smoothly.
+                        Make sure it's at least 8 characters long and something you won't forget.
                     </p>
                 </div>
                 <p className="text-indigo-300 text-xs">© 2025 StockFlow. All rights reserved.</p>
@@ -48,8 +51,8 @@ export default function Login() {
                         </span>
                     </div>
 
-                    <h2 className="text-2xl font-bold text-white mb-1.5">Sign In</h2>
-                    <p className="text-slate-400 text-sm mb-7">Enter your credentials to access your account</p>
+                    <h2 className="text-2xl font-bold text-white mb-1.5">New Password</h2>
+                    <p className="text-slate-400 text-sm mb-7">Enter your new password below</p>
 
                     {errors.email && (
                         <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-4 py-3 rounded-xl mb-5">
@@ -66,7 +69,6 @@ export default function Login() {
                                 <input
                                     type="email"
                                     required
-                                    autoFocus
                                     value={data.email}
                                     onChange={e => setData("email", e.target.value)}
                                     placeholder="you@example.com"
@@ -78,12 +80,7 @@ export default function Login() {
                         </div>
 
                         <div>
-                            <div className="flex items-center justify-between mb-1.5">
-                                <label className="block text-sm font-medium text-slate-300">Password</label>
-                                <Link href="/forgot-password" className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
-                                    Forgot Password?
-                                </Link>
-                            </div>
+                            <label className="block text-sm font-medium text-slate-300 mb-1.5">New Password</label>
                             <div className="relative">
                                 <IconLock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
                                 <input
@@ -91,6 +88,24 @@ export default function Login() {
                                     required
                                     value={data.password}
                                     onChange={e => setData("password", e.target.value)}
+                                    placeholder="••••••••"
+                                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm
+                                               text-white placeholder-slate-500 focus:outline-none focus:ring-2
+                                               focus:ring-indigo-500/40 focus:border-indigo-500/50 transition-all"
+                                />
+                            </div>
+                            {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password}</p>}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-slate-300 mb-1.5">Confirm Password</label>
+                            <div className="relative">
+                                <IconLock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+                                <input
+                                    type="password"
+                                    required
+                                    value={data.password_confirmation}
+                                    onChange={e => setData("password_confirmation", e.target.value)}
                                     placeholder="••••••••"
                                     className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm
                                                text-white placeholder-slate-500 focus:outline-none focus:ring-2
@@ -106,21 +121,14 @@ export default function Login() {
                                        disabled:opacity-60 text-white font-semibold rounded-xl shadow-lg shadow-indigo-900/50
                                        transition-all mt-2"
                         >
-                            {processing ? "Signing in…" : "Sign In"}
+                            {processing ? "Resetting…" : "Reset Password"}
                             {!processing && <IconArrowRight size={16} stroke={2} />}
                         </button>
                     </form>
-
-                    <p className="text-center text-sm text-slate-500 mt-6">
-                        Don't have an account?{" "}
-                        <Link href="/register" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
-                            Create one
-                        </Link>
-                    </p>
                 </div>
             </div>
         </div>
     );
 }
 
-Login.layout = (page) => <AuthLayout children={page} />;
+ResetPassword.layout = (page) => <AuthLayout children={page} />;

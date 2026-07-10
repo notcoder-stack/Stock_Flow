@@ -1,17 +1,15 @@
 import AuthLayout from "../../Layouts/AuthLayout";
 import { Link, useForm } from "@inertiajs/react";
-import { IconPackage, IconMail, IconLock, IconArrowRight, IconAlertCircle } from "@tabler/icons-react";
+import { IconPackage, IconMail, IconArrowRight, IconAlertCircle, IconCheck } from "@tabler/icons-react";
 
-export default function Login() {
-    const { data, setData, post, errors, processing, reset } = useForm({
+export default function ForgotPassword({ status }) {
+    const { data, setData, post, errors, processing } = useForm({
         email: "",
-        password: "",
-        remember: false,
     });
 
     const submit = (e) => {
         e.preventDefault();
-        post("/login", { onFinish: () => reset("password") });
+        post("/forgot-password");
     };
 
     return (
@@ -26,10 +24,10 @@ export default function Login() {
                 </div>
                 <div>
                     <h2 className="text-4xl font-extrabold text-white leading-tight mb-4">
-                        Welcome back to<br />your dashboard.
+                        Forgot your password?
                     </h2>
                     <p className="text-indigo-200 text-sm leading-relaxed max-w-sm">
-                        Sign in to manage your inventory, track sales, and keep your business running smoothly.
+                        No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
                     </p>
                 </div>
                 <p className="text-indigo-300 text-xs">© 2025 StockFlow. All rights reserved.</p>
@@ -48,8 +46,15 @@ export default function Login() {
                         </span>
                     </div>
 
-                    <h2 className="text-2xl font-bold text-white mb-1.5">Sign In</h2>
-                    <p className="text-slate-400 text-sm mb-7">Enter your credentials to access your account</p>
+                    <h2 className="text-2xl font-bold text-white mb-1.5">Reset Password</h2>
+                    <p className="text-slate-400 text-sm mb-7">Enter your email to receive a reset link</p>
+
+                    {status && (
+                        <div className="flex items-center gap-2 bg-green-500/10 border border-green-500/20 text-green-400 text-sm px-4 py-3 rounded-xl mb-5">
+                            <IconCheck size={16} stroke={2} />
+                            {status}
+                        </div>
+                    )}
 
                     {errors.email && (
                         <div className="flex items-center gap-2 bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-4 py-3 rounded-xl mb-5">
@@ -77,28 +82,6 @@ export default function Login() {
                             </div>
                         </div>
 
-                        <div>
-                            <div className="flex items-center justify-between mb-1.5">
-                                <label className="block text-sm font-medium text-slate-300">Password</label>
-                                <Link href="/forgot-password" className="text-xs font-medium text-indigo-400 hover:text-indigo-300 transition-colors">
-                                    Forgot Password?
-                                </Link>
-                            </div>
-                            <div className="relative">
-                                <IconLock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
-                                <input
-                                    type="password"
-                                    required
-                                    value={data.password}
-                                    onChange={e => setData("password", e.target.value)}
-                                    placeholder="••••••••"
-                                    className="w-full pl-10 pr-4 py-3 bg-white/5 border border-white/10 rounded-xl text-sm
-                                               text-white placeholder-slate-500 focus:outline-none focus:ring-2
-                                               focus:ring-indigo-500/40 focus:border-indigo-500/50 transition-all"
-                                />
-                            </div>
-                        </div>
-
                         <button
                             type="submit"
                             disabled={processing}
@@ -106,15 +89,15 @@ export default function Login() {
                                        disabled:opacity-60 text-white font-semibold rounded-xl shadow-lg shadow-indigo-900/50
                                        transition-all mt-2"
                         >
-                            {processing ? "Signing in…" : "Sign In"}
+                            {processing ? "Sending link…" : "Email Password Reset Link"}
                             {!processing && <IconArrowRight size={16} stroke={2} />}
                         </button>
                     </form>
 
                     <p className="text-center text-sm text-slate-500 mt-6">
-                        Don't have an account?{" "}
-                        <Link href="/register" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
-                            Create one
+                        Remember your password?{" "}
+                        <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
+                            Back to login
                         </Link>
                     </p>
                 </div>
@@ -123,4 +106,4 @@ export default function Login() {
     );
 }
 
-Login.layout = (page) => <AuthLayout children={page} />;
+ForgotPassword.layout = (page) => <AuthLayout children={page} />;

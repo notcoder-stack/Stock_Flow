@@ -1,12 +1,10 @@
 import AuthLayout from "../../Layouts/AuthLayout";
 import { Link, useForm } from "@inertiajs/react";
-import { useRoute } from "../../../../vendor/tightenco/ziggy";
 import {
     IconPackage, IconMail, IconLock, IconUser, IconArrowRight, IconAlertCircle,
 } from "@tabler/icons-react";
 
 export default function Register() {
-    const route = useRoute();
     const { data, setData, post, errors, processing, reset } = useForm({
         name: "",
         email: "",
@@ -16,7 +14,7 @@ export default function Register() {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route("register"), { onFinish: () => reset("password", "password_confirmation") });
+        post("/register", { onFinish: () => reset("password", "password_confirmation") });
     };
 
     const hasErrors = Object.keys(errors).length > 0;

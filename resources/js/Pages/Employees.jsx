@@ -163,7 +163,7 @@ export default function Employees({ employees }) {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center justify-center gap-1">
                 {employees.links.map((link) =>
                     link.url ? (
                         <Link key={link.label} href={link.url}

@@ -1,6 +1,6 @@
 import Header from "../components/Header";
 import { useForm, usePage } from "@inertiajs/react";
-import { IconLock, IconShield, IconCheck, IconAlertCircle, IconUser } from "@tabler/icons-react";
+import { IconLock, IconShield, IconCheck, IconAlertCircle, IconUser, IconTrash, IconAlertTriangle } from "@tabler/icons-react";
 
 function FormField({ label, error, children }) {
     return (
@@ -31,6 +31,19 @@ export default function Settings() {
         e.preventDefault();
         put("/settings/password", {
             onSuccess: () => reset(),
+        });
+    };
+
+    const deleteAccountForm = useForm({
+        password: "",
+    });
+
+    const handleDeleteAccount = (e) => {
+        e.preventDefault();
+        deleteAccountForm.delete("/settings/account", {
+            preserveScroll: true,
+            onSuccess: () => deleteAccountForm.reset(),
+            onError: () => deleteAccountForm.reset("password"),
         });
     };
 
@@ -146,6 +159,44 @@ export default function Settings() {
                             <span className="text-sm font-medium text-slate-800">{value}</span>
                         </div>
                     ))}
+                </div>
+            </div>
+
+            {/* Danger Zone */}
+            <div className="bg-white rounded-2xl border border-red-100 shadow-sm overflow-hidden mt-8">
+                <div className="flex items-center gap-3 px-5 py-4 border-b border-red-100 bg-red-50/50">
+                    <div className="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+                        <IconAlertTriangle size={16} className="text-red-600" />
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-semibold text-red-900">Danger Zone</h3>
+                        <p className="text-xs text-red-700">Delete your account permanently</p>
+                    </div>
+                </div>
+                <div className="p-5 space-y-4">
+                    <div className="text-sm text-slate-600 max-w-xl">
+                        Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.
+                    </div>
+                    <form onSubmit={handleDeleteAccount} className="space-y-4">
+                        <FormField label="Confirm Password" error={deleteAccountForm.errors.password}>
+                            <input
+                                type="password"
+                                placeholder="Enter your password to confirm"
+                                value={deleteAccountForm.data.password}
+                                onChange={e => deleteAccountForm.setData("password", e.target.value)}
+                                className={`${inputCls} ${deleteAccountForm.errors.password ? "border-red-300 focus:border-red-400 focus:ring-red-500/20" : ""}`}
+                            />
+                        </FormField>
+                        <button
+                            type="submit"
+                            disabled={deleteAccountForm.processing}
+                            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium
+                                       bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white shadow-sm transition-colors"
+                        >
+                            <IconTrash size={16} />
+                            {deleteAccountForm.processing ? "Deleting…" : "Delete Account"}
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

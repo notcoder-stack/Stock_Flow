@@ -100,7 +100,7 @@ export default function Products({ products, filters }) {
                                    focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
                     />
                 </div>
-                
+
                 <select
                     value={minRating}
                     onChange={e => setMinRating(e.target.value)}
@@ -126,7 +126,7 @@ export default function Products({ products, filters }) {
                                    focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
                     />
                 </div>
-                
+
                 {(search || minRating || maxPrice) && (
                     <button
                         onClick={() => { setSearch(""); setMinRating(""); setMaxPrice(""); }}
@@ -200,7 +200,7 @@ export default function Products({ products, filters }) {
             )}
 
             {/* Pagination */}
-            <div className="flex items-center gap-1 pt-2">
+            <div className="flex items-center justify-center gap-1 pt-2">
                 {products.links.map((link) =>
                     link.url ? (
                         <Link

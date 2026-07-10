@@ -136,7 +136,7 @@ export default function Suppliers({ suppliers }) {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center justify-center gap-1">
                 {suppliers.links.map((link) =>
                     link.url ? (
                         <Link key={link.label} href={link.url}

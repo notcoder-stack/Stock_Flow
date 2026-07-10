@@ -125,7 +125,7 @@ export default function Sales({ sales }) {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center justify-center gap-1">
                 {sales.links.map((link) =>
                     link.url ? (
                         <Link key={link.label} href={link.url}

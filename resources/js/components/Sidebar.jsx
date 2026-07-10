@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
     IconForklift,
     IconClipboard,
@@ -7,6 +8,9 @@ import {
     IconLayoutDashboard,
     IconLogout,
     IconX,
+    IconSun,
+    IconMoon,
+    IconChevronUp,
 } from "@tabler/icons-react";
 import { Link, usePage, router } from "@inertiajs/react";
 
@@ -20,7 +24,31 @@ const data = [
 ];
 
 export default function Sidebar({ onClose }) {
-    const { url } = usePage();
+    const { url, props } = usePage();
+    const { auth } = props;
+    
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const [isDark, setIsDark] = useState(false);
+
+    useEffect(() => {
+        const isDarkMode = document.documentElement.classList.contains("dark");
+        setIsDark(isDarkMode);
+    }, []);
+
+    const toggleTheme = () => {
+        const root = document.documentElement;
+        if (root.classList.contains("dark")) {
+            root.classList.remove("dark");
+            root.setAttribute("data-mantine-color-scheme", "light");
+            localStorage.setItem("theme", "light");
+            setIsDark(false);
+        } else {
+            root.classList.add("dark");
+            root.setAttribute("data-mantine-color-scheme", "dark");
+            localStorage.setItem("theme", "dark");
+            setIsDark(true);
+        }
+    };
 
     const handleLogout = (e) => {
         e.preventDefault();
@@ -86,16 +114,41 @@ export default function Sidebar({ onClose }) {
             </div>
 
             {/* Footer */}
-            <div className="px-3 pb-4 border-t border-slate-700/60 pt-3">
+            <div className="px-3 pb-4 border-t border-slate-700/60 pt-3 relative">
+                {isDropdownOpen && (
+                    <div className="absolute bottom-full left-3 right-3 mb-2 bg-slate-800 border border-slate-700 rounded-xl p-1.5 shadow-xl animate-in fade-in slide-in-from-bottom-2">
+                        <button
+                            onClick={toggleTheme}
+                            className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm font-medium
+                                       text-slate-300 hover:bg-slate-700 hover:text-white transition-all duration-150"
+                        >
+                            {isDark ? <IconSun size={17} stroke={1.5} /> : <IconMoon size={17} stroke={1.5} />}
+                            {isDark ? "Light Mode" : "Dark Mode"}
+                        </button>
+                        <button
+                            onClick={handleLogout}
+                            className="flex items-center gap-3 px-3 py-2.5 w-full rounded-lg text-sm font-medium
+                                       text-slate-300 hover:bg-red-500/10 hover:text-red-400 transition-all duration-150 mt-1"
+                        >
+                            <IconLogout size={17} stroke={1.5} />
+                            Logout
+                        </button>
+                    </div>
+                )}
+                
                 <button
-                    onClick={handleLogout}
-                    className="flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium
-                               text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all duration-150"
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className="flex items-center justify-between px-3 py-2.5 w-full rounded-xl text-sm font-medium
+                               bg-slate-800/50 text-slate-300 hover:bg-slate-800 hover:text-white transition-all duration-150"
                 >
-                    <IconLogout size={19} stroke={1.5} />
-                    Logout
+                    <div className="flex items-center gap-3">
+                        <div className="w-7 h-7 rounded-full bg-indigo-500 flex items-center justify-center text-xs text-white font-bold">
+                            {auth?.user?.name?.charAt(0)?.toUpperCase() || "U"}
+                        </div>
+                        <span className="truncate max-w-[120px]">{auth?.user?.name || "User"}</span>
+                    </div>
+                    <IconChevronUp size={16} className={`transition-transform duration-200 text-slate-500 ${isDropdownOpen ? "rotate-180" : ""}`} />
                 </button>
-                <p className="text-center text-xs text-slate-600 mt-3">© 2025 StockFlow</p>
             </div>
         </nav>
     );

@@ -10,6 +10,15 @@
     @vite('resources/js/app.jsx')
     @inertiaHead
     @routes
+    <script>
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.documentElement.setAttribute('data-mantine-color-scheme', 'dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+            document.documentElement.setAttribute('data-mantine-color-scheme', 'light');
+        }
+    </script>
 </head>
 <body>
 @inertia
