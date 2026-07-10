@@ -18,7 +18,7 @@ return [
     |
     */
 
-    'default' => env('LOG_CHANNEL', 'stack'),
+    'default' => env('LOG_CHANNEL', 'errorlog'),
 
     /*
     |--------------------------------------------------------------------------
@@ -124,7 +124,7 @@ return [
         ],
 
         'emergency' => [
-            'path' => env('LOG_EMERGENCY_PATH', storage_path('logs/laravel.log')),
+            'path' => env('LOG_EMERGENCY_PATH', '/tmp/laravel-emergency.log'),
         ],
 
     ],
