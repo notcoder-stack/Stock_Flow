@@ -19,4 +19,19 @@ class Product extends Model
         "image",
         "image_original_name",
     ];
+
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['search'] ?? false, function ($query, $search) {
+            $query->where('name', 'like', '%' . $search . '%');
+        });
+
+        $query->when($filters['min_rating'] ?? false, function ($query, $minRating) {
+            $query->where('rating', '>=', $minRating);
+        });
+
+        $query->when($filters['max_price'] ?? false, function ($query, $maxPrice) {
+            $query->where('price', '<=', $maxPrice);
+        });
+    }
 }

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Header from "../components/Header.jsx";
 import ProductModal from "../components/ProductModal.jsx";
 import Rating from "../components/Rating.jsx";
@@ -27,19 +27,37 @@ function StockBadge({ qty }) {
     );
 }
 
-export default function Products({ products }) {
+export default function Products({ products, filters }) {
     const [opened, { open, close }] = useDisclosure(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState(filters?.search || "");
+    const [minRating, setMinRating] = useState(filters?.min_rating || "");
+    const [maxPrice, setMaxPrice] = useState(filters?.max_price || "");
     const [deleteConfirm, setDeleteConfirm] = useState(null);
+    const isInitialRender = useRef(true);
+
+    useEffect(() => {
+        if (isInitialRender.current) {
+            isInitialRender.current = false;
+            return;
+        }
+
+        const timeout = setTimeout(() => {
+            router.get(
+                "/products",
+                { search, min_rating: minRating, max_price: maxPrice },
+                { preserveState: true, preserveScroll: true }
+            );
+        }, 500);
+
+        return () => clearTimeout(timeout);
+    }, [search, minRating, maxPrice]);
 
     if (!products) return (
         <div className="text-center text-red-500 py-10">Failed to fetch products</div>
     );
 
-    const filtered = products.data.filter(p =>
-        p.name.toLowerCase().includes(search.toLowerCase())
-    );
+
 
     const openModal = (product = null) => {
         setSelectedProduct(product);
@@ -68,30 +86,67 @@ export default function Products({ products }) {
                 </button>
             </div>
 
-            {/* Search */}
-            <div className="relative max-w-sm">
-                <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                    className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm
-                               text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2
-                               focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
-                />
+            {/* Filters */}
+            <div className="flex flex-col md:flex-row gap-3">
+                <div className="relative flex-1 max-w-sm">
+                    <IconSearch size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+                    <input
+                        type="text"
+                        placeholder="Search products..."
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                        className="w-full pl-9 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm
+                                   text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2
+                                   focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
+                    />
+                </div>
+                
+                <select
+                    value={minRating}
+                    onChange={e => setMinRating(e.target.value)}
+                    className="px-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm text-slate-700 
+                               focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
+                >
+                    <option value="">Any Rating</option>
+                    <option value="4">4+ Stars</option>
+                    <option value="3">3+ Stars</option>
+                    <option value="2">2+ Stars</option>
+                    <option value="1">1+ Stars</option>
+                </select>
+
+                <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">$</span>
+                    <input
+                        type="number"
+                        placeholder="Max Price"
+                        value={maxPrice}
+                        onChange={e => setMaxPrice(e.target.value)}
+                        className="w-32 pl-7 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm
+                                   text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2
+                                   focus:ring-indigo-500/30 focus:border-indigo-400 transition-all"
+                    />
+                </div>
+                
+                {(search || minRating || maxPrice) && (
+                    <button
+                        onClick={() => { setSearch(""); setMinRating(""); setMaxPrice(""); }}
+                        className="px-4 py-2.5 text-sm font-medium text-slate-500 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-xl transition-colors shrink-0"
+                    >
+                        Clear
+                    </button>
+                )}
             </div>
 
             {/* Product grid */}
-            {filtered.length === 0 ? (
+            {products.data.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-20 text-slate-400">
                     <IconPackage size={48} stroke={1} />
                     <p className="text-base font-medium mt-3">No products found</p>
-                    <p className="text-sm mt-1">Try a different search or add a new product</p>
+                    <p className="text-sm mt-1">Try different filters or add a new product</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                    {filtered.map((product) => (
+                    {products.data.map((product) => (
                         <div key={product.id}
                             className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden
                                        hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">

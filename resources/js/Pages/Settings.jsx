@@ -1,6 +1,6 @@
 import Header from "../components/Header";
 import { useForm, usePage } from "@inertiajs/react";
-import { IconLock, IconShield, IconCheck, IconAlertCircle } from "@tabler/icons-react";
+import { IconLock, IconShield, IconCheck, IconAlertCircle, IconUser } from "@tabler/icons-react";
 
 function FormField({ label, error, children }) {
     return (
@@ -19,7 +19,7 @@ function FormField({ label, error, children }) {
 const inputCls = "w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500/30 focus:border-indigo-400 transition-all";
 
 export default function Settings() {
-    const { flash } = usePage().props;
+    const { flash, auth } = usePage().props;
 
     const { data, setData, put, processing, errors, reset, wasSuccessful } = useForm({
         current: "",
@@ -45,6 +45,29 @@ export default function Settings() {
                     {flash?.success || "Password updated successfully."}
                 </div>
             )}
+
+            {/* Profile Info card */}
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+                <div className="flex items-center gap-3 px-5 py-4 border-b border-slate-100">
+                    <div className="w-8 h-8 bg-indigo-50 rounded-lg flex items-center justify-center">
+                        <IconUser size={16} className="text-indigo-600" />
+                    </div>
+                    <div>
+                        <h3 className="text-sm font-semibold text-slate-900">Profile Information</h3>
+                        <p className="text-xs text-slate-500">Your account details</p>
+                    </div>
+                </div>
+                <div className="p-5">
+                    <FormField label="Email Address">
+                        <input
+                            type="email"
+                            value={auth.user?.email || ""}
+                            readOnly
+                            className={`${inputCls} bg-slate-100 opacity-70 cursor-not-allowed`}
+                        />
+                    </FormField>
+                </div>
+            </div>
 
             {/* Password card */}
             <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">

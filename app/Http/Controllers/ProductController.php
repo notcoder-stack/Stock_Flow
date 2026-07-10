@@ -11,10 +11,19 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::latest()->paginate(6);
-        return Inertia::render("Products", ["products" => $products]);
+        $filters = $request->only(['search', 'min_rating', 'max_price']);
+
+        $products = Product::latest()
+            ->filter($filters)
+            ->paginate(6)
+            ->withQueryString();
+
+        return Inertia::render("Products", [
+            "products" => $products,
+            "filters" => $filters,
+        ]);
     }
 
     /**
