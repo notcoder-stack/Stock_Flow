@@ -6,7 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\HandleInertiaRequests;
 
 // Override paths for read-only environments (like Vercel)
-if (!is_writable(__DIR__ . '/../storage/logs')) {
+if (isset($_SERVER['VERCEL']) || isset($_ENV['VERCEL']) || (defined('PHP_OS_FAMILY') && PHP_OS_FAMILY !== 'Windows' && str_contains(realpath(__DIR__), '/var/task'))) {
     $vercelStorage = '/tmp/storage';
     foreach ([$vercelStorage . '/bootstrap/cache', $vercelStorage . '/framework/sessions', $vercelStorage . '/framework/views', $vercelStorage . '/framework/cache'] as $dir) {
         if (!is_dir($dir)) {
