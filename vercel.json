@@ -24,9 +24,10 @@
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "true",
+    "DB_CONNECTION": "pgsql",
     "LOG_EMERGENCY_PATH": "/tmp/laravel-emergency.log",
     "CACHE_STORE": "array",
-    "LOG_CHANNEL": "stderr",
+    "LOG_CHANNEL": "errorlog",
     "APP_CONFIG_CACHE": "/tmp/config.php",
     "APP_EVENTS_CACHE": "/tmp/events.php",
     "APP_PACKAGES_CACHE": "/tmp/packages.php",
