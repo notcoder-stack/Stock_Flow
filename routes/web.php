@@ -10,6 +10,7 @@ use App\Http\Controllers\SaleController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\PasswordResetController;
+use App\Http\Controllers\PurchaseOrderController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", [HomePageController::class, "index"]);
@@ -35,6 +36,11 @@ Route::middleware("auth")->group(function () {
     Route::resource("sales", SaleController::class);
     Route::resource("suppliers", SupplierController::class);
     Route::resource("employees", EmployeeController::class);
+
+    Route::resource("purchase-orders", PurchaseOrderController::class);
+    Route::post("purchase-orders/{purchase_Order}/approve", [PurchaseOrderController::class, "approve"])->name("purchase-orders.approve");
+    Route::post("purchase-orders/{purchase_Order}/amend", [PurchaseOrderController::class, "amend"])->name("purchase-orders.amend");
+    Route::post("purchase-orders/{purchase_Order}/cancel", [PurchaseOrderController::class, "cancel"])->name("purchase-orders.cancel");
 
     Route::put("/settings/password", [SettingsController::class, "updatePassword"])->name("settings.password");
     Route::delete("/settings/account", [SettingsController::class, "destroyAccount"])->name("settings.account.destroy");

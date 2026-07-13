@@ -11,11 +11,13 @@ import {
     IconSun,
     IconMoon,
     IconChevronUp,
+    IconReceipt,
 } from "@tabler/icons-react";
 import { Link, usePage, router } from "@inertiajs/react";
 
 const data = [
     { link: "/dashboard", label: "Dashboard", icon: IconLayoutDashboard },
+    { link: "/purchase-orders", label: "Purchase Orders", icon: IconReceipt },
     { link: "/products",  label: "Products",  icon: IconClipboard },
     { link: "/sales",     label: "Sales",     icon: IconCoins },
     { link: "/suppliers", label: "Suppliers", icon: IconForklift },
