@@ -18,17 +18,18 @@ import { Link, usePage, router } from "@inertiajs/react";
 const data = [
     { link: "/dashboard", label: "Dashboard", icon: IconLayoutDashboard },
     { link: "/purchase-orders", label: "Purchase Orders", icon: IconReceipt },
-    { link: "/products",  label: "Products",  icon: IconClipboard },
-    { link: "/sales",     label: "Sales",     icon: IconCoins },
+    { link: "/products", label: "Products", icon: IconClipboard },
+    { link: "/sales", label: "Sales", icon: IconCoins },
     { link: "/suppliers", label: "Suppliers", icon: IconForklift },
     { link: "/employees", label: "Employees", icon: IconUser },
-    { link: "/settings",  label: "Settings",  icon: IconAdjustmentsHorizontal },
+    { link: "/settings", label: "Settings", icon: IconAdjustmentsHorizontal },
+    { link: "/purchase-orders", label: "Purchase Orders", icon: IconReceipt },
 ];
 
 export default function Sidebar({ onClose }) {
     const { url, props } = usePage();
     const { auth } = props;
-    
+
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [isDark, setIsDark] = useState(false);
 
@@ -137,7 +138,7 @@ export default function Sidebar({ onClose }) {
                         </button>
                     </div>
                 )}
-                
+
                 <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
                     className="flex items-center justify-between px-3 py-2.5 w-full rounded-xl text-sm font-medium
